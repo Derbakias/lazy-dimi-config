@@ -15,7 +15,7 @@ Built on [LazyVim](https://lazyvim.github.io).
 ### Change the Prefix Key
 Edit `~/.tmux.conf` and add:
 ```
-# Change prefix to Ctrl + a (much easier than Ctrl + b and without a risk ofbreaking a finger 😂)
+# Change prefix to Ctrl + a (much easier than Ctrl + b and without a risk of breaking a finger 😂)
 set -g prefix C-a
 
 # Unbind old prefix
