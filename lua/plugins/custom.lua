@@ -1,15 +1,4 @@
 return {
-  -- Show diagnostics below the line instead of inline
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      diagnostics = {
-        virtual_text = false,
-        virtual_lines = true,
-      },
-    },
-  },
-
   -- Persist colorscheme across sessions
   {
     "LazyVim/LazyVim",
@@ -24,6 +13,16 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      picker = {
+        win = {
+          input = {
+            keys = {
+              ["<C-h>"] = { "toggle_hidden", mode = { "i", "n" } },
+              ["<A-i>"] = { "toggle_ignored", mode = { "i", "n" } },
+            },
+          },
+        },
+      },
       terminal = {
         win = {
           keys = {
@@ -127,6 +126,13 @@ return {
         require("menu").open("default")
       end, { desc = "Open menu" })
     end,
+  },
+
+  -- Auto-pair brackets with Enter expansion ({|} → multiline)
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    opts = {},
   },
 
   -- Mason tool installer (LSP servers, formatters, linters)

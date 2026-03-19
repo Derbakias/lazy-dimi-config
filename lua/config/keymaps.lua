@@ -3,8 +3,16 @@
 -- Add any additional keymaps here
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit insert mode" })
 vim.keymap.set("t", "<C-x>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-vim.keymap.set({ "n", "v", "x" }, "<C-d>", "5j", { desc = "Scroll down" })
-vim.keymap.set({ "n", "v", "x" }, "<C-u>", "5k", { desc = "Scroll up" })
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function(ev)
+    local ft = vim.bo[ev.buf].filetype or ""
+    if vim.bo[ev.buf].buftype == "" and not ft:match("^snacks_") then
+      vim.keymap.set({ "n", "v", "x" }, "<C-d>", "5j", { desc = "Scroll down", buffer = ev.buf })
+      vim.keymap.set({ "n", "v", "x" }, "<C-u>", "5k", { desc = "Scroll up", buffer = ev.buf })
+    end
+  end,
+})
+
 vim.keymap.set("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close buffer" })
 vim.keymap.set("n", "<leader>z", function()
   Snacks.toggle.new({

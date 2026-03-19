@@ -26,6 +26,19 @@
 
 ---
 
+## File Search (Picker)
+
+| Key | Action |
+|-----|--------|
+| `<leader>ff` | Find files (root dir) |
+| `<leader>fF` | Find files (cwd) |
+| `<C-h>` | Toggle hidden files (dotfiles) |
+| `<A-i>` | Toggle ignored files (.gitignore) |
+| `<A-w>` | Cycle focus between picker panes (list ↔ preview) |
+| `<Tab>` | Select/mark file for multi-open |
+
+---
+
 ## Buffers
 
 | Key | Action |
@@ -55,7 +68,6 @@
 | `<C-w>s` | Horizontal split |
 | `<C-w>w` | Cycle to next window |
 | `<C-w>h/j/k/l` | Move to left/down/up/right window |
-| `<A-w>` | Cycle focus between picker panes (list ↔ preview) |
 | `<C-Left>` / `<C-Right>` | Resize window width |
 | `<C-Up>` / `<C-Down>` | Resize window height |
 | `<leader>fw` | Pick and focus a window from a list |
@@ -93,6 +105,8 @@
 | Key | Action |
 |-----|--------|
 | `jk` | Exit insert mode |
+| `<A-j>` | Move line(s) down (normal, insert, visual) |
+| `<A-k>` | Move line(s) up (normal, insert, visual) |
 | `;` | Enter command mode (like `:`) |
 | `f{char}` then `f` | Find char forward, then repeat with `f` |
 | `F{char}` then `F` | Find char backward, then repeat with `F` |
@@ -134,21 +148,59 @@
 
 ## Git
 
+### Snacks (pickers / navigation)
 | Key | Action |
 |-----|--------|
-| `<leader>gd` | Open git diff picker (files + diffs) |
-| `<C-f>` | Scroll diff preview down (from file list) |
-| `<C-b>` | Scroll diff preview up (from file list) |
+| `<leader>gs` | Git status picker (changed files) |
+| `<leader>gd` | Git diff picker (files + inline diffs) |
+| `<leader>gl` | Git log (all commits) |
+| `<leader>gL` | Git log (cwd) |
+| `<leader>gf` | Current file history |
+| `<leader>gb` | Blame for current line (who changed it + commit) |
+| `<leader>gB` | Open file on GitHub/GitLab in browser |
 
-### Git Signs (in gutter)
-Lines with changes show signs in the gutter. Use:
+> Inside diff/log pickers: `<C-f>` / `<C-b>` scroll the preview pane.
+
+### Gitsigns (hunk-level operations)
+
+A **hunk** is a contiguous block of changes within a file. Gitsigns lets you stage, reset, or preview individual hunks without touching the rest of the file.
+
 | Key | Action |
 |-----|--------|
-| `]h` | Next hunk |
-| `[h` | Previous hunk |
-| `<leader>ghs` | Stage hunk |
-| `<leader>ghr` | Reset hunk |
-| `<leader>ghp` | Preview hunk |
+| `]h` / `[h` | Jump to next / previous hunk |
+| `<leader>ghs` | Stage hunk under cursor |
+| `<leader>ghS` | Stage entire file |
+| `<leader>ghr` | Reset (discard) hunk under cursor |
+| `<leader>ghR` | Reset entire file |
+| `<leader>ghu` | Undo last staged hunk |
+| `<leader>ghp` | Preview hunk inline |
+| `<leader>ghb` | Blame current line (full message) |
+| `<leader>ghB` | Blame entire buffer (per-line) |
+| `<leader>ghd` | Diff current file against index |
+| `<leader>ghD` | Diff current file against last commit (`~`) |
+
+> To unstage a whole file: `git restore --staged <file>` in terminal.
+
+### CodeDiff (compare against any git revision)
+
+Opens a side-by-side read-only diff view in a new tab.
+
+| Command | Action |
+|---------|--------|
+| `:CodeDiff HEAD` | Compare current file vs last commit |
+| `:CodeDiff HEAD~1` | Compare vs one commit before HEAD |
+| `:CodeDiff main` | Compare vs another branch |
+| `:CodeDiff abc123` | Compare vs a specific commit hash |
+| `:CodeDiff v1.0.0` | Compare vs a tag |
+
+> Inside the CodeDiff view:
+
+| Key | Action |
+|-----|--------|
+| `]c` / `[c` | Next / previous hunk |
+| `]f` / `[f` | Next / previous file |
+| `-` | Toggle stage |
+| `q` | Close diff view |
 
 ---
 
@@ -161,6 +213,25 @@ Diagnostics appear on a dedicated line below the affected code.
 | `<leader>cd` | Show full diagnostic in float |
 | `]d` | Jump to next diagnostic |
 | `[d` | Jump to previous diagnostic |
+
+### Inlay Hints
+
+Inlay hints are read-only virtual text shown by the LSP — e.g. parameter names like `message:` inside `console.log(message: "")`. They are not part of the buffer and cannot be accepted or edited. They are purely informational.
+
+| Key | Action |
+|-----|--------|
+| `<leader>uh` | Toggle inlay hints |
+
+### Autocomplete
+
+The autocomplete popup appears in **insert mode** only (press `i` first).
+
+| Key | Action |
+|-----|--------|
+| `<C-n>` / `<C-p>` | Navigate suggestions down / up |
+| `<C-y>` | Accept selected suggestion |
+| `<C-space>` | Manually trigger completion |
+| `<C-e>` | Dismiss completion menu |
 
 ---
 
