@@ -297,6 +297,22 @@ Available catppuccin flavours: `catppuccin-latte`, `catppuccin-frappe`, `catppuc
 
 ---
 
+## Code Folding
+
+| Key | Action |
+|-----|--------|
+| `za` | Toggle fold under cursor |
+| `zo` | Open fold under cursor |
+| `zc` | Close fold under cursor |
+| `zO` | Open all folds under cursor (recursively) |
+| `zC` | Close all folds under cursor (recursively) |
+| `zR` | Open all folds in the file |
+| `zM` | Close all folds in the file |
+| `zj` | Jump to next fold |
+| `zk` | Jump to previous fold |
+
+---
+
 ## Vim Built-ins Worth Knowing
 
 | Key | Action |
