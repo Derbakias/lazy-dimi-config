@@ -222,6 +222,17 @@ A **hunk** is a contiguous block of changes within a file. Gitsigns lets you sta
 
 ---
 
+## LSP Hover Docs
+
+| Key | Action |
+|-----|--------|
+| `K` | Open LSP docs popup for symbol under cursor |
+| `K` (again) or <C-ww> | Enter the popup window (to scroll) |
+| `<C-d>` / `<C-u>` | Scroll down / up inside the popup |
+| `<C-w>q` | Exit the popup |
+
+---
+
 ## Diagnostics (LSP)
 
 Diagnostics appear on a dedicated line below the affected code.
