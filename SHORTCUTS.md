@@ -217,8 +217,7 @@ A **hunk** is a contiguous block of changes within a file. Gitsigns lets you sta
 | `]c` / `[c` | Next / previous hunk |
 | `<Tab>` / `<S-Tab>` | Next / previous file |
 | `gf` | Open current file in previous tab |
-| `<leader>e` | Focus the file panel |
-| `<leader>b` | Toggle the file panel |
+| `<leader>e` | Toggle the file panel (open/close) |
 | `q` | Close Diffview |
 
 ---

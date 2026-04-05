@@ -297,10 +297,19 @@ return {
         diff_buf_read = function()
           vim.wo.wrap = true
         end,
+        view_opened = function()
+          require("markview.commands").Stop()
+          require("markview.commands").Disable()
+        end,
+        view_closed = function()
+          require("markview.commands").Start()
+        end,
       },
       keymaps = {
         view = {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" } },
+          { "n", "<leader>e", function() require("diffview.actions").toggle_files() end, { desc = "Toggle file panel" } },
+          { "n", "<leader>b", false },
           {
             "n",
             "gf",
@@ -327,6 +336,9 @@ return {
         },
         file_panel = {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" } },
+          { "n", "<leader>e", function() require("diffview.actions").toggle_files() end, { desc = "Toggle file panel" } },
+          { "n", "<leader>b", false },
+          { "n", "<C-r>", function() require("diffview.actions").restore_entry() end, { desc = "Revert file" } },
           {
             "n",
             "gf",
