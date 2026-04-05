@@ -35,9 +35,14 @@
 | ------------ | --------------------------------------------------------- |
 | `<leader>ff` | Find files (root dir)                                     |
 | `<leader>fF` | Find files (cwd)                                          |
+| `<leader>sg` | Grep (root dir)                                           |
+| `<leader>sG` | Grep (cwd)                                                |
 | `<leader>fG` | Grep with include/exclude filters (see below)             |
+| `<leader>sb` | Search buffer lines (fuzzy finder with preview)           |
 | `<C-h>`      | Toggle hidden files (dotfiles)                            |
 | `<A-i>`      | Toggle ignored files (.gitignore)                         |
+| `<A-c>`      | Toggle case-sensitive search (grep picker only)           |
+| `<A-w>`      | Toggle whole word match (grep picker only)                |
 | `<A-t>`      | Cycle focus between picker panes (input ↔ list ↔ preview) |
 | `<Tab>`      | Select/mark file for multi-open                           |
 
@@ -324,6 +329,57 @@ Available catppuccin flavours: `catppuccin-latte`, `catppuccin-frappe`, `catppuc
 | `[s` | Jump to previous misspelling              |
 | `z=` | Suggest corrections for word under cursor |
 | `zg` | Mark word as correct (add to dictionary)  |
+
+---
+
+## Search and Replace
+
+**Current file (built-in):**
+
+| Command          | Action                                   |
+| ---------------- | ---------------------------------------- |
+| `:%s/old/new/g`  | Replace all occurrences in file          |
+| `:%s/old/new/gc` | Replace all with confirmation (y/n each) |
+
+**Project-wide (grug-far):**
+
+| Key                          | Action                                       |
+| ---------------------------- | -------------------------------------------- |
+| `<leader>sr`                 | Open search and replace panel                |
+| Visual select + `<leader>sr` | Open with search pre-filled from selection   |
+| `<Tab>`                      | Move to next field                           |
+| `<S-Tab>`                    | Move to previous field                       |
+| `\r`                         | Apply replacements (after reviewing matches) |
+| `<Esc>` / `q`                | Close the panel                              |
+
+### Panel fields
+
+| Field            | Purpose                                             | Example          |
+| ---------------- | --------------------------------------------------- | ---------------- |
+| **Search**       | Text or regex to find                               | `subscribe`      |
+| **Replace**      | Replacement text (leave empty to just search)       | `unsubscribe`    |
+| **Files Filter** | Glob pattern for file matching (supports `**`)      | `**/hero/*.tsx`  |
+| **Paths**        | Literal directory path from project root (no globs) | `src/components` |
+| **Flags**        | Ripgrep flags (see below)                           | `-i -w`          |
+
+### Ripgrep flags
+
+| Flag          | Action                                      |
+| ------------- | ------------------------------------------- |
+| `-i`          | Case-insensitive search                     |
+| `-w`          | Match whole words only                      |
+| `-U`          | Multiline matching (pattern can span lines) |
+| `--hidden`    | Include hidden files (dotfiles)             |
+| `--no-ignore` | Include gitignored files                    |
+
+### Examples
+
+| Search                 | Files Filter | Paths            | Flags | What it does                     |
+| ---------------------- | ------------ | ---------------- | ----- | -------------------------------- |
+| `subscribe`            | `*.tsx`      |                  |       | Find in all tsx files            |
+| `subscribe`            | `**/hero/**` |                  |       | Find in any `hero/` directory    |
+| `subscribe`            |              | `src/components` |       | Find in a specific directory     |
+| `const.*\n.*subscribe` |              |                  | `-U`  | Multiline match across two lines |
 
 ---
 

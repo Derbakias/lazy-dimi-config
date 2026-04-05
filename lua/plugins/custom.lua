@@ -119,8 +119,8 @@ return {
             keys = {
               ["<C-h>"] = { "toggle_hidden", mode = { "i", "n" } },
               ["<A-i>"] = { "toggle_ignored", mode = { "i", "n" } },
-              ["<A-w>"] = false, -- disabled for grep whole word toggle
-              ["<A-t>"] = { "cycle_win", mode = { "i", "n" } }, -- was <A-w>
+              ["<A-w>"] = false,
+              ["<A-t>"] = { "cycle_win", mode = { "i", "n" } },
               ["<A-j>"] = { "preview_scroll_down", mode = { "i", "n" } },
               ["<A-k>"] = { "preview_scroll_up", mode = { "i", "n" } },
               ["<C-f>"] = false,
