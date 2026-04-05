@@ -214,7 +214,7 @@ A **hunk** is a contiguous block of changes within a file. Gitsigns lets you sta
 | `:DiffviewOpen d4a7b0d..519b30e` | Compare between two commits |
 | `:DiffviewFileHistory %` | Commit history for current file |
 | `:DiffviewFileHistory` | Commit history for whole repo |
-| `]c` / `[c` | Next / previous hunk |
+| `]h` / `[h` | Next / previous hunk |
 | `<Tab>` / `<S-Tab>` | Next / previous file |
 | `gf` | Open current file in previous tab |
 | `<leader>e` | Toggle the file panel (open/close) |
