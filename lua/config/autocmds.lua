@@ -38,6 +38,15 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", { callback = setup_gitsigns_staged_hl })
 vim.api.nvim_create_autocmd("VimEnter", { callback = vim.schedule_wrap(setup_gitsigns_staged_hl) })
 
+-- Remove :IncRename from command history so it doesn't replay on :<Up>
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+  callback = function()
+    vim.schedule(function()
+      vim.fn.histdel(":", "^IncRename")
+    end)
+  end,
+})
+
 -- Save colorscheme on change so it persists across sessions
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = function()
