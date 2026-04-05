@@ -12,6 +12,32 @@ vim.api.nvim_create_autocmd("VimEnter", {
   end,
 })
 
+-- Define staged gitsigns highlights (dimmed version of normal signs)
+-- Most themes don't define GitSignsStaged* so they're invisible
+local function setup_gitsigns_staged_hl()
+  local function dim(color, factor)
+    local r = math.floor(math.floor(color / 0x10000) * factor)
+    local g = math.floor(math.floor(color % 0x10000 / 0x100) * factor)
+    local b = math.floor(color % 0x100 * factor)
+    return r * 0x10000 + g * 0x100 + b
+  end
+  local map = {
+    GitSignsStagedAdd = "GitSignsAdd",
+    GitSignsStagedChange = "GitSignsChange",
+    GitSignsStagedDelete = "GitSignsDelete",
+    GitSignsStagedTopdelete = "GitSignsDelete",
+    GitSignsStagedChangedelete = "GitSignsChange",
+  }
+  for staged, base in pairs(map) do
+    local hl = vim.api.nvim_get_hl(0, { name = base })
+    if hl.fg then
+      vim.api.nvim_set_hl(0, staged, { fg = dim(hl.fg, 0.6) })
+    end
+  end
+end
+vim.api.nvim_create_autocmd("ColorScheme", { callback = setup_gitsigns_staged_hl })
+vim.api.nvim_create_autocmd("VimEnter", { callback = vim.schedule_wrap(setup_gitsigns_staged_hl) })
+
 -- Save colorscheme on change so it persists across sessions
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = function()
