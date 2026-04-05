@@ -61,5 +61,51 @@ vim.keymap.set("n", "<leader>fw", function()
   end)
 end, { desc = "Focus Window" })
 
+vim.keymap.set({ "n", "v", "x" }, "<A-j>", "<C-f>", { desc = "Scroll page down" })
+vim.keymap.set({ "n", "v", "x" }, "<A-k>", "<C-b>", { desc = "Scroll page up" })
+
+-- Move lines (Alt+Shift+J/K), replacing the LazyVim defaults overridden above
+vim.keymap.set("n", "<A-J>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-K>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
+vim.keymap.set("i", "<A-J>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move line down" })
+vim.keymap.set("i", "<A-K>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move line up" })
+vim.keymap.set("v", "<A-J>", ":m '>+1<cr>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-K>", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
+
+vim.keymap.set("n", "<leader>fG", function()
+  local function split(s)
+    local t = {}
+    for part in s:gmatch("[^,]+") do t[#t + 1] = vim.trim(part) end
+    return t
+  end
+  vim.ui.input({ prompt = "Include (e.g. src, *.ts, lib/*.py — empty = all): " }, function(inc_input)
+    if inc_input == nil then return end
+    vim.ui.input({ prompt = "Exclude (e.g. dist, *.test.ts — empty = none): " }, function(excl_input)
+      if excl_input == nil then return end
+      local opts = { dirs = {}, glob = {} }
+      for _, part in ipairs(split(inc_input)) do
+        if part:match("%.[a-zA-Z]+$") then
+          -- file glob: *.ts, lib/*.py
+          opts.glob[#opts.glob + 1] = part
+        elseif part:match("[*?]") then
+          -- dir wildcard: sortino-*, my-* → expand to real dirs
+          for _, d in ipairs(vim.fn.glob(part, false, true)) do
+            if vim.fn.isdirectory(d) == 1 then
+              opts.dirs[#opts.dirs + 1] = d
+            end
+          end
+        else
+          -- plain dir: src, lib
+          opts.dirs[#opts.dirs + 1] = part
+        end
+      end
+      if #opts.dirs == 0 then opts.dirs = nil end
+      if #opts.glob == 0 then opts.glob = nil end
+      if excl_input ~= "" then opts.exclude = split(excl_input) end
+      Snacks.picker.grep(opts)
+    end)
+  end)
+end, { desc = "Grep with includes/excludes" })
+
 vim.keymap.set({ "n", "v", "x" }, ";", ":", { desc = "Enter command mode" })
 vim.keymap.set({ "n", "v", "x" }, "<leader>;", ";", { desc = "Repeat last f/F/t/T" })

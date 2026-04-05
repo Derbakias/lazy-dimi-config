@@ -15,6 +15,8 @@
 | `r` | Rename file |
 | `h` | Close directory |
 | `<BS>` | Go up a directory |
+| `E` | Expand all directories |
+| `Z` | Collapse all directories |
 
 ### Explorer Symbols
 | Symbol | Meaning |
@@ -32,10 +34,28 @@
 |-----|--------|
 | `<leader>ff` | Find files (root dir) |
 | `<leader>fF` | Find files (cwd) |
+| `<leader>fG` | Grep with include/exclude filters (see below) |
 | `<C-h>` | Toggle hidden files (dotfiles) |
 | `<A-i>` | Toggle ignored files (.gitignore) |
-| `<A-w>` | Cycle focus between picker panes (list ↔ preview) |
+| `<A-t>` | Cycle focus between picker panes (input ↔ list ↔ preview) |
 | `<Tab>` | Select/mark file for multi-open |
+
+### `<leader>fG` — Filtered Grep
+
+Prompts for two inputs before opening the grep picker:
+
+1. **Include** — narrow the search scope:
+   - Directory names: `src`, `lib`
+   - File globs: `*.ts`, `lib/*.py`
+   - Dir wildcards: `my-*` (expands matching directories)
+   - Leave empty to search everywhere
+2. **Exclude** — skip paths (comma-separated): `dist`, `*.test.ts`
+   - Leave empty for no exclusions
+
+**Examples:**
+- Include `src, *.ts` → only `.ts` files inside `src/`
+- Include `api` / Exclude `*.spec.ts` → grep `api/` skipping spec files
+- Include empty / Exclude `node_modules, dist` → full project minus build artifacts
 
 ---
 
@@ -93,8 +113,10 @@
 
 | Key | Action |
 |-----|--------|
-| `<C-d>` | Scroll down 5 lines |
-| `<C-u>` | Scroll up 5 lines |
+| `<A-j>` | Scroll page down |
+| `<A-k>` | Scroll page up |
+| `<C-d>` | Scroll down 5 lines (precision) |
+| `<C-u>` | Scroll up 5 lines (precision) |
 
 > Cursor stays vertically centered at all times to emulate mouse scrolling (`scrolloff=999`)
 
@@ -105,8 +127,8 @@
 | Key | Action |
 |-----|--------|
 | `jk` | Exit insert mode |
-| `<A-j>` | Move line(s) down (normal, insert, visual) |
-| `<A-k>` | Move line(s) up (normal, insert, visual) |
+| `<A-J>` | Move line(s) down (normal, insert, visual) |
+| `<A-K>` | Move line(s) up (normal, insert, visual) |
 | `;` | Enter command mode (like `:`) |
 | `f{char}` then `f` | Find char forward, then repeat with `f` |
 | `F{char}` then `F` | Find char backward, then repeat with `F` |
@@ -158,6 +180,7 @@
 | `<leader>gf` | Current file history |
 | `<leader>gb` | Blame for current line (who changed it + commit) |
 | `<leader>gB` | Open file on GitHub/GitLab in browser |
+| `<leader>gv` | Open Diffview (Open diff view of all changed files) |
 
 > Inside diff/log pickers: `<C-f>` / `<C-b>` scroll the preview pane.
 
@@ -181,26 +204,22 @@ A **hunk** is a contiguous block of changes within a file. Gitsigns lets you sta
 
 > To unstage a whole file: `git restore --staged <file>` in terminal.
 
-### CodeDiff (compare against any git revision)
+### Diffview (Open diff view of all changed files)
 
-Opens a side-by-side read-only diff view in a new tab.
-
-| Command | Action |
-|---------|--------|
-| `:CodeDiff HEAD` | Compare current file vs last commit |
-| `:CodeDiff HEAD~1` | Compare vs one commit before HEAD |
-| `:CodeDiff main` | Compare vs another branch |
-| `:CodeDiff abc123` | Compare vs a specific commit hash |
-| `:CodeDiff v1.0.0` | Compare vs a tag |
-
-> Inside the CodeDiff view:
-
-| Key | Action |
-|-----|--------|
+| Key / Command | Action |
+|---------------|--------|
+| `<leader>gv` | Open Diffview (unstaged changes) |
+| `:DiffviewOpen HEAD~2` | Compare against 2 commits ago |
+| `:DiffviewOpen main...HEAD` | Compare branch vs HEAD |
+| `:DiffviewOpen d4a7b0d..519b30e` | Compare between two commits |
+| `:DiffviewFileHistory %` | Commit history for current file |
+| `:DiffviewFileHistory` | Commit history for whole repo |
 | `]c` / `[c` | Next / previous hunk |
-| `]f` / `[f` | Next / previous file |
-| `-` | Toggle stage |
-| `q` | Close diff view |
+| `<Tab>` / `<S-Tab>` | Next / previous file |
+| `gf` | Open current file in previous tab |
+| `<leader>e` | Focus the file panel |
+| `<leader>b` | Toggle the file panel |
+| `q` | Close Diffview |
 
 ---
 
@@ -280,6 +299,21 @@ Available catppuccin flavours: `catppuccin-latte`, `catppuccin-frappe`, `catppuc
 | `:verbose map <key>` | Show what a key is mapped to and where it was set |
 
 
+## Search in File (`/`)
+
+Press `/` to open the search bar, then type your pattern and press `Enter`.
+ 
+| Pattern | Description |
+|---------|-------------|
+| `derbakias` | Find all occurrences (case-insensitive if `smartcase` is on) |
+| `\<derbakias\>` | Whole word only (won't match "derbakias") |
+| `\Cderbakias` | Case-sensitive match |
+| `\C\<derbakias\>` | Case-sensitive + whole word |
+| `\derbakias` | Force case-insensitive |
+| `n` / `N` | Jump to next / previous match |
+
+> Note: `/` opens the search bar — do **not** type `/` again as part of the pattern.
+
 ## All the shortcuts from the docs
 
 # ⌨️ Keymaps | LazyVim
@@ -308,8 +342,8 @@ General[​](#general "Direct link to General")
 |<C-Down>          |Decrease Window Height               |n         |
 |<C-Left>          |Decrease Window Width                |n         |
 |<C-Right>         |Increase Window Width                |n         |
-|<A-j>             |Move Down                            |n, i, v   |
-|<A-k>             |Move Up                              |n, i, v   |
+|<A-J>             |Move line Down                       |n, i, v   |
+|<A-K>             |Move line Up                         |n, i, v   |
 |<S-h>             |Prev Buffer                          |n         |
 |<S-l>             |Next Buffer                          |n         |
 |[b                |Prev Buffer                          |n         |

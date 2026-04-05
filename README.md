@@ -15,21 +15,26 @@ Built on [LazyVim](https://lazyvim.github.io).
 ### Change the Prefix Key
 Edit `~/.tmux.conf` and add:
 ```
-# Change prefix to Ctrl + a (much easier than Ctrl + b and without a risk of breaking a finger 😂)
-set -g prefix C-a
+# Change prefix to Ctrl + Space (much easier than Ctrl + b and without a risk of breaking a finger 😂)
+set -g prefix C-Space
 
 # Unbind old prefix
 unbind C-b
 
 # Allow sending prefix to nested tmux sessions
-bind C-a send-prefix
+bind C-Space send-prefix
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
+
 ```
 Reload config from terminal:
 ```
 tmux source-file ~/.tmux.conf
 ```
 
-> All shortcuts below assume prefix is `C-a`
+> All shortcuts below assume prefix is `C-Space`
 
 ### Sessions
 
@@ -38,7 +43,7 @@ tmux source-file ~/.tmux.conf
 | `tmux new -s mysession -n mywindow` | New session named `mysession` with window `mywindow` |
 | `tmux new -s mysession` | Start a new session |
 | `tmux ls` | Show all sessions |
-| `C-a d` | Detach from current session |
+| `C-Space d` | Detach from current session |
 | `tmux attach -t mysession` | Attach to session by name |
 | `tmux kill-session -t mysession` | Kill a specific session |
 | `tmux kill-server` | Kill all sessions |
@@ -47,10 +52,10 @@ tmux source-file ~/.tmux.conf
 
 | Key | Action |
 |-----|--------|
-| `C-a c` | Create a new window |
-| `C-a ,` | Rename current window |
-| `C-a &` | Close current window |
-| `C-a w` | List all windows |
-| `C-a p` | Previous window |
-| `C-a n` | Next window |
-| `C-a 0-9` | Switch to window by number |
+| `C-Space c` | Create a new window |
+| `C-Space ,` | Rename current window |
+| `C-Space &` | Close current window |
+| `C-Space w` | List all windows |
+| `C-Space p` | Previous window |
+| `C-Space n` | Next window |
+| `C-Space 0-9` | Switch to window by number |
