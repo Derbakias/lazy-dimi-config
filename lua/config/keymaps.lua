@@ -107,5 +107,27 @@ vim.keymap.set("n", "<leader>fG", function()
   end)
 end, { desc = "Grep with includes/excludes" })
 
+-- Toggle case-sensitive / whole-word in native / and ? search
+vim.keymap.set("c", "<A-c>", function()
+  if vim.fn.getcmdtype() ~= "/" and vim.fn.getcmdtype() ~= "?" then return end
+  local line = vim.fn.getcmdline()
+  if line:find("\\C", 1, true) then
+    vim.fn.setcmdline((line:gsub("\\C", "", 1)))
+  else
+    vim.fn.setcmdline("\\C" .. line:gsub("\\c", "", 1))
+  end
+end, { desc = "Toggle case sensitive (search)" })
+
+vim.keymap.set("c", "<A-w>", function()
+  if vim.fn.getcmdtype() ~= "/" and vim.fn.getcmdtype() ~= "?" then return end
+  local line = vim.fn.getcmdline()
+  local inner = line:match("^\\<(.-)\\>$")
+  if inner then
+    vim.fn.setcmdline(inner)
+  else
+    vim.fn.setcmdline("\\<" .. line .. "\\>")
+  end
+end, { desc = "Toggle whole word (search)" })
+
 vim.keymap.set({ "n", "v", "x" }, ";", ":", { desc = "Enter command mode" })
 vim.keymap.set({ "n", "v", "x" }, "<leader>;", ";", { desc = "Repeat last f/F/t/T" })

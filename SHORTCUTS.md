@@ -303,14 +303,16 @@ Available catppuccin flavours: `catppuccin-latte`, `catppuccin-frappe`, `catppuc
 
 Press `/` to open the search bar, then type your pattern and press `Enter`.
  
-| Pattern | Description |
-|---------|-------------|
+| Pattern / Key | Description |
+|---------------|-------------|
 | `derbakias` | Find all occurrences (case-insensitive if `smartcase` is on) |
-| `\<derbakias\>` | Whole word only (won't match "derbakias") |
+| `\<derbakias\>` | Whole word only (won't match "derbakiasXYZ") |
 | `\Cderbakias` | Case-sensitive match |
 | `\C\<derbakias\>` | Case-sensitive + whole word |
-| `\derbakias` | Force case-insensitive |
+| `\cderbakias` | Force case-insensitive |
 | `n` / `N` | Jump to next / previous match |
+| `<A-c>` | Toggle `\C` (case-sensitive) on/off while typing |
+| `<A-w>` | Toggle `\<...\>` (whole word) on/off while typing |
 
 > Note: `/` opens the search bar — do **not** type `/` again as part of the pattern.
 
