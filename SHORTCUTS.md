@@ -122,6 +122,15 @@ Prompts for two inputs before opening the grep picker:
 
 ---
 
+## Context Menu
+
+| Key | Action |
+|-----|--------|
+| `<C-t>` | Open context menu (keyboard) |
+| `<RightMouse>` | Open context menu (mouse) |
+
+---
+
 ## Editing
 
 | Key | Action |
