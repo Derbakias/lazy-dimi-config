@@ -38,6 +38,9 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", { callback = setup_gitsigns_staged_hl })
 vim.api.nvim_create_autocmd("VimEnter", { callback = vim.schedule_wrap(setup_gitsigns_staged_hl) })
 
+-- Brighter line numbers
+vim.api.nvim_set_hl(0, "LineNr", { fg = "#888888" })
+
 -- Remove :IncRename from command history so it doesn't replay on :<Up>
 vim.api.nvim_create_autocmd("CmdlineLeave", {
   callback = function()
@@ -47,10 +50,10 @@ vim.api.nvim_create_autocmd("CmdlineLeave", {
   end,
 })
 
--- Save colorscheme on change so it persists across sessions
+-- Re-apply custom highlights after colorscheme change
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = function()
-    vim.fn.writefile({ vim.g.colors_name }, vim.fn.stdpath("data") .. "/colorscheme")
+    vim.api.nvim_set_hl(0, "LineNr", { fg = "#888888" })
   end,
 })
 -- with `vim.api.nvim_create_autocmd`

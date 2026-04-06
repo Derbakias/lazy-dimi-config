@@ -274,9 +274,11 @@ Diagnostics appear on a dedicated line below the affected code.
 
 | Key          | Action                        |
 | ------------ | ----------------------------- |
-| `<leader>cd` | Show full diagnostic in float |
-| `]d`         | Jump to next diagnostic       |
-| `[d`         | Jump to previous diagnostic   |
+| `<leader>cd` | Show full diagnostic in float             |
+| `]d`         | Jump to next diagnostic                   |
+| `[d`         | Jump to previous diagnostic               |
+| `<leader>ca` | Code actions (quickfix, refactor, suggest) |
+| `<leader>cA` | Source actions (organize imports, etc.)    |
 
 ### Inlay Hints
 
@@ -484,6 +486,15 @@ Sessions automatically save open buffers and layout per project.
 | `zz`                 | Center cursor (same as `scrolloff=999` already does) |
 | `<C-f>` / `<C-b>`    | Page down / page up                                  |
 | `:verbose map <key>` | Show what a key is mapped to and where it was set    |
+
+## Word Under Cursor Search
+
+| Key | Description                           |
+| --- | ------------------------------------- |
+| `*` | Search forward for word under cursor  |
+| `#` | Search backward for word under cursor |
+| `n` | Jump to next match                    |
+| `N` | Jump to previous match                |
 
 ## Search in File (`/`)
 

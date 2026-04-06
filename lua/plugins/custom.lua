@@ -19,14 +19,10 @@ local function grep_title(picker)
 end
 
 return {
-  -- Persist colorscheme across sessions
+  -- Locked colorscheme
   {
     "LazyVim/LazyVim",
-    opts = function()
-      local file = vim.fn.stdpath("data") .. "/colorscheme"
-      local ok, lines = pcall(vim.fn.readfile, file)
-      return { colorscheme = (ok and lines[1]) or "tokyonight" }
-    end,
+    opts = { colorscheme = "catppuccin-mocha" },
   },
 
   -- Free up <C-l> in terminal so it clears the shell
@@ -312,6 +308,7 @@ return {
       hooks = {
         diff_buf_read = function()
           vim.wo.wrap = true
+          vim.api.nvim_set_hl(0, "Folded", { bg = "#252530", fg = "#555570" })
         end,
         view_opened = function()
           require("markview.commands").Stop()
@@ -452,6 +449,12 @@ return {
       auto_update = false,
       run_on_start = true,
     },
+  },
+
+  -- Disable inlay hints globally (LazyVim re-enables on every LSP attach)
+  {
+    "neovim/nvim-lspconfig",
+    opts = { inlay_hints = { enabled = false } },
   },
 
   -- Force <A-t> = cycle_win (overrides trouble.nvim's trouble_open binding)
