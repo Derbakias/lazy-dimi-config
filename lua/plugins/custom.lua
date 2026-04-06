@@ -162,25 +162,41 @@ return {
         end
         local nav_opts = { target = "all" }
         map("n", "]h", function()
-          if vim.wo.diff then vim.cmd.normal({ "]c", bang = true })
-          else gs.nav_hunk("next", nav_opts) end
+          if vim.wo.diff then
+            vim.cmd.normal({ "]c", bang = true })
+          else
+            gs.nav_hunk("next", nav_opts)
+          end
         end, "Next Hunk")
         map("n", "[h", function()
-          if vim.wo.diff then vim.cmd.normal({ "[c", bang = true })
-          else gs.nav_hunk("prev", nav_opts) end
+          if vim.wo.diff then
+            vim.cmd.normal({ "[c", bang = true })
+          else
+            gs.nav_hunk("prev", nav_opts)
+          end
         end, "Prev Hunk")
-        map("n", "]H", function() gs.nav_hunk("last", nav_opts) end, "Last Hunk")
-        map("n", "[H", function() gs.nav_hunk("first", nav_opts) end, "First Hunk")
+        map("n", "]H", function()
+          gs.nav_hunk("last", nav_opts)
+        end, "Last Hunk")
+        map("n", "[H", function()
+          gs.nav_hunk("first", nav_opts)
+        end, "First Hunk")
         map({ "n", "x" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
         map({ "n", "x" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
         map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
         map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
         map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
         map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
-        map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
-        map("n", "<leader>ghB", function() gs.blame() end, "Blame Buffer")
+        map("n", "<leader>ghb", function()
+          gs.blame_line({ full = true })
+        end, "Blame Line")
+        map("n", "<leader>ghB", function()
+          gs.blame()
+        end, "Blame Buffer")
         map("n", "<leader>ghd", gs.diffthis, "Diff This")
-        map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
+        map("n", "<leader>ghD", function()
+          gs.diffthis("~")
+        end, "Diff This ~")
         map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
       end,
     },
@@ -308,7 +324,14 @@ return {
       keymaps = {
         view = {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" } },
-          { "n", "<leader>e", function() require("diffview.actions").toggle_files() end, { desc = "Toggle file panel" } },
+          {
+            "n",
+            "<leader>e",
+            function()
+              require("diffview.actions").toggle_files()
+            end,
+            { desc = "Toggle file panel" },
+          },
           { "n", "<leader>b", false },
           {
             "n",
@@ -336,9 +359,23 @@ return {
         },
         file_panel = {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" } },
-          { "n", "<leader>e", function() require("diffview.actions").toggle_files() end, { desc = "Toggle file panel" } },
+          {
+            "n",
+            "<leader>e",
+            function()
+              require("diffview.actions").toggle_files()
+            end,
+            { desc = "Toggle file panel" },
+          },
           { "n", "<leader>b", false },
-          { "n", "<C-r>", function() require("diffview.actions").restore_entry() end, { desc = "Revert file" } },
+          {
+            "n",
+            "<C-r>",
+            function()
+              require("diffview.actions").restore_entry()
+            end,
+            { desc = "Revert file" },
+          },
           {
             "n",
             "gf",
@@ -415,5 +452,19 @@ return {
       auto_update = false,
       run_on_start = true,
     },
+  },
+
+  -- Force <A-t> = cycle_win (overrides trouble.nvim's trouble_open binding)
+  {
+    "folke/snacks.nvim",
+    opts = function(_, opts)
+      local wins = { "input", "list", "preview" }
+      for _, w in ipairs(wins) do
+        opts.picker.win[w].keys["<a-t>"] = {
+          "cycle_win",
+          mode = w == "input" and { "i", "n" } or { "n" },
+        }
+      end
+    end,
   },
 }
