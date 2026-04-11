@@ -300,11 +300,6 @@ return {
     },
     opts = {
       enhanced_diff_hl = true,
-      view = {
-        default = { layout = "diff2_vertical" },
-        merge_tool = { layout = "diff3_vertical" },
-        file_history = { layout = "diff2_vertical" },
-      },
       hooks = {
         diff_buf_read = function()
           vim.wo.wrap = true
