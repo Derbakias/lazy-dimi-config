@@ -3,15 +3,6 @@
 --
 -- Add any additional autocmds here
 
--- Open explorer on startup
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 then
-      Snacks.explorer()
-    end
-  end,
-})
-
 -- Define staged gitsigns highlights (dimmed version of normal signs)
 -- Most themes don't define GitSignsStaged* so they're invisible
 local function setup_gitsigns_staged_hl()
