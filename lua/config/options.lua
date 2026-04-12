@@ -5,3 +5,4 @@ vim.opt.scrolloff = 999 -- keep cursor centered vertically
 vim.opt.shortmess:append("Ss") -- S: hide capped native count (lualine shows real count); s: hide wrap messages
 vim.opt.wrap = true -- wrap long lines within the window
 -- inlay hints disabled via nvim-lspconfig opts (see plugins/custom.lua)
+vim.g.lazyvim_prettier_needs_config = false -- run prettier even without a project config

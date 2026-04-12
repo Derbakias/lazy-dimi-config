@@ -432,6 +432,8 @@ return {
         "pyright",
         "eslint-lsp",
         "emmet-language-server",
+        "css-lsp",
+        "html-lsp",
         "lua-language-server",
         "prettier",
         "black",
@@ -447,9 +449,28 @@ return {
   },
 
   -- Disable inlay hints globally (LazyVim re-enables on every LSP attach)
+  -- Also enable CSS/HTML/Emmet LSPs for CSS property autocomplete + Emmet abbreviations
   {
     "neovim/nvim-lspconfig",
-    opts = { inlay_hints = { enabled = false } },
+    opts = {
+      inlay_hints = { enabled = false },
+      servers = {
+        cssls = {},
+        html = {},
+        emmet_language_server = {
+          filetypes = {
+            "css",
+            "html",
+            "javascriptreact",
+            "less",
+            "sass",
+            "scss",
+            "typescriptreact",
+            "vue",
+          },
+        },
+      },
+    },
   },
 
   -- Force <A-t> = cycle_win (overrides trouble.nvim's trouble_open binding)
