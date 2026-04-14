@@ -8,7 +8,7 @@ return {
       scrollEOF.setup(opts)
       setmetatable(scrollEOF.opts.disabled_filetypes, {
         __index = function()
-          return vim.bo.buftype ~= ""
+          return vim.bo.buftype ~= "" or vim.wo.diff
         end,
       })
     end,

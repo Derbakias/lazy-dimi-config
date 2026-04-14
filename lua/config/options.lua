@@ -6,3 +6,4 @@ vim.opt.shortmess:append("Ss") -- S: hide capped native count (lualine shows rea
 vim.opt.wrap = true -- wrap long lines within the window
 -- inlay hints disabled via nvim-lspconfig opts (see plugins/custom.lua)
 vim.g.lazyvim_prettier_needs_config = false -- run prettier even without a project config
+vim.g.autoformat = false -- disable autoformat on save by default; toggle with <leader>uf
