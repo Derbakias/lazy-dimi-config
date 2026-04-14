@@ -286,13 +286,6 @@ return {
     end,
   },
 
-  -- Auto-pair brackets with Enter expansion ({|} → multiline)
-  {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    opts = {},
-  },
-
   {
     "sindrets/diffview.nvim",
     keys = {

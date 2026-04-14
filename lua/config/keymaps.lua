@@ -131,3 +131,12 @@ end, { desc = "Toggle whole word (search)" })
 
 vim.keymap.set({ "n", "v", "x" }, ";", ":", { desc = "Enter command mode" })
 vim.keymap.set({ "n", "v", "x" }, "<leader>;", ";", { desc = "Repeat last f/F/t/T" })
+
+vim.keymap.set("i", "<CR>", function()
+  local ok, blink = pcall(require, "blink.cmp")
+  if ok and blink.is_visible() then
+    blink.accept()
+    return ""
+  end
+  return vim.fn["MiniPairs"] and vim.fn.luaeval("MiniPairs.cr()") or "\r"
+end, { expr = true, replace_keycodes = false, desc = "Accept blink or MiniPairs CR" })
