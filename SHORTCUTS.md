@@ -303,13 +303,18 @@ The autocomplete popup appears in **insert mode** only (press `i` first).
 
 ## Terminal
 
-| Key          | Action                                   |
-| ------------ | ---------------------------------------- |
-| `<leader>ft` | Open terminal                            |
-| `<C-x>`      | Exit terminal mode (back to normal mode) |
-| `<C-l>`      | Clear terminal                           |
+| Key                 | Action                                              |
+| ------------------- | --------------------------------------------------- |
+| `<leader>ft`        | New floating terminal (fresh shell each press)      |
+| `<C-/>`             | Toggle terminal `[count]` — hides/restores, process stays alive |
+| `1<C-/>`, `2<C-/>`… | Toggle terminal 1, 2, … (each is an independent persistent shell) |
+| `<C-x>`             | Exit terminal mode (back to normal mode)            |
+| `<C-h/j/k/l>`       | Navigate windows directly from terminal mode        |
+| `<C-w>` (in term)   | Cycle to next window                                |
 
-> To open a second independent terminal: focus a different window and run `:terminal`
+> `<C-/>` uses Snacks' count-indexed terminals: `N<C-/>` gives you terminal N.
+> Press the same count again to hide it; press again to bring it back with its history intact.
+> `<leader>ft` always spawns a brand-new floating shell (no count, not persistent-by-index).
 
 ---
 

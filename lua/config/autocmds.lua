@@ -47,6 +47,20 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     vim.api.nvim_set_hl(0, "LineNr", { fg = "#888888" })
   end,
 })
+
+-- Snacks picker input force-enters insert mode on BufEnter; cancel that so
+-- navigating to the search bar lands in normal mode. Press `i` to type.
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function(args)
+    if vim.bo[args.buf].filetype == "snacks_picker_input" then
+      vim.schedule(function()
+        if vim.api.nvim_get_current_buf() == args.buf and vim.fn.mode():sub(1, 1) == "i" then
+          vim.cmd("stopinsert")
+        end
+      end)
+    end
+  end,
+})
 -- with `vim.api.nvim_create_autocmd`
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)

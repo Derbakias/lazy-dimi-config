@@ -138,6 +138,8 @@ return {
         },
       },
       terminal = {
+        auto_insert = false,
+        start_insert = false,
         win = {
           keys = {
             nav_l = false,

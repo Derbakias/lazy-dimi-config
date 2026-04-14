@@ -3,6 +3,11 @@
 -- Add any additional keymaps here
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit insert mode" })
 vim.keymap.set("t", "<C-x>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = "Go to left window" })
+vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { desc = "Go to lower window" })
+vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { desc = "Go to upper window" })
+vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], { desc = "Go to right window" })
+vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>w]], { desc = "Cycle to next window" })
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function(ev)
     local ft = vim.bo[ev.buf].filetype or ""
@@ -31,12 +36,8 @@ vim.keymap.set("n", "<S-Tab>", "<cmd>bprev<cr>", { desc = "Prev buffer" })
 vim.keymap.set("n", "<C-n>", function() Snacks.explorer() end, { desc = "Toggle explorer" })
 vim.keymap.set("n", "<C-e>", function() Snacks.explorer() end, { desc = "Toggle explorer" })
 vim.keymap.set("n", "<leader>ft", function()
-  if vim.bo.buftype == "terminal" then
-    vim.cmd("vsplit | terminal")
-  else
-    vim.cmd("belowright split | terminal")
-  end
-end, { desc = "New Terminal" })
+  Snacks.terminal.open()
+end, { desc = "New Terminal (floating)" })
 vim.keymap.set("n", "<leader>fw", function()
   local wins = vim.api.nvim_list_wins()
   local items = {}
