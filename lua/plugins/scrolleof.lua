@@ -2,7 +2,9 @@ return {
   {
     "Aasim-A/scrollEOF.nvim",
     event = { "CursorMoved", "WinScrolled" },
-    opts = {},
+    opts = {
+      disabled_filetypes = { "markdown" },
+    },
     config = function(_, opts)
       local scrollEOF = require("scrollEOF")
       scrollEOF.setup(opts)

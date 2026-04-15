@@ -231,12 +231,22 @@ return {
       },
     },
   },
-
-  -- Markdown preview
   {
-    "OXY2DEV/markview.nvim",
-    lazy = false,
+      'MeanderingProgrammer/render-markdown.nvim',
+      dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" },
+      ---@module 'render-markdown'
+      ---@type render.md.UserConfig
+      opts = {
+        heading = {
+          icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+          sign = true,
+        },
+        checkbox = {
+          enabled = true,
+        },
+      },
   },
+
 
   -- Vim training game
   {
@@ -295,19 +305,7 @@ return {
     },
     opts = {
       enhanced_diff_hl = true,
-      hooks = {
-        diff_buf_read = function()
-          vim.wo.wrap = true
-          vim.api.nvim_set_hl(0, "Folded", { bg = "#252530", fg = "#555570" })
-        end,
-        view_opened = function()
-          require("markview.commands").Stop()
-          require("markview.commands").Disable()
-        end,
-        view_closed = function()
-          require("markview.commands").Start()
-        end,
-      },
+      hooks = {},
       keymaps = {
         view = {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" } },
