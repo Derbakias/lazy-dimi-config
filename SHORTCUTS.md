@@ -408,23 +408,83 @@ Available catppuccin flavours: `catppuccin-latte`, `catppuccin-frappe`, `catppuc
 
 ## Debugging (DAP)
 
-| Key                         | Action                          |
-| --------------------------- | ------------------------------- |
-| `<leader>db`                | Toggle breakpoint               |
-| `<leader>dB`                | Breakpoint with condition       |
-| `<leader>dc`                | Run / Continue                  |
-| `<leader>da`                | Run with args                   |
-| `<leader>dC`                | Run to cursor                   |
-| `<leader>di`                | Step into                       |
-| `<leader>do`                | Step out                        |
-| `<leader>dO`                | Step over                       |
-| `<leader>dP`                | Pause                           |
-| `<leader>dt`                | Terminate                       |
-| `<leader>dl`                | Run last                        |
-| `<leader>dr`                | Toggle REPL                     |
-| `<leader>du`                | Toggle DAP UI                   |
-| `<leader>de`                | Eval expression (normal/visual) |
-| `<leader>dj` / `<leader>dk` | Navigate stack down / up        |
+### Core commands
+
+| Key                         | VSCode equivalent | Action                          |
+| --------------------------- | ----------------- | ------------------------------- |
+| `<leader>db`                | F9                | Toggle breakpoint               |
+| `<leader>dB`                | —                 | Breakpoint with condition       |
+| `<leader>dc`                | F5                | Run / Continue                  |
+| `<leader>da`                | —                 | Run with args                   |
+| `<leader>dC`                | —                 | Run to cursor                   |
+| `<leader>di`                | F11               | Step into                       |
+| `<leader>do`                | Shift+F11         | Step out                        |
+| `<leader>dO`                | F10               | Step over                       |
+| `<leader>dP`                | —                 | Pause                           |
+| `<leader>dt`                | Shift+F5          | Terminate                       |
+| `<leader>dl`                | —                 | Run last                        |
+| `<leader>dr`                | —                 | Toggle REPL                     |
+| `<leader>du`                | —                 | Toggle DAP UI (sidebar)         |
+| `<leader>de`                | —                 | Eval expression (normal/visual) |
+| `<leader>dj` / `<leader>dk` | —                 | Navigate stack down / up        |
+| `<leader>d?`                | —                 | Show F-key cheat-sheet          |
+
+### VSCode-style F-keys
+
+| Key             | Action            |
+| --------------- | ----------------- |
+| `F5`            | Continue / Start  |
+| `F9`            | Toggle breakpoint |
+| `F10`           | Step over         |
+| `F11`           | Step into         |
+| `Shift+F11`     | Step out          |
+| `Shift+F5`      | Terminate         |
+| `Ctrl+Shift+F5` | Restart           |
+
+> **Note**: Shift+F-keys depend on your terminal sending them. Test with
+> `<C-v>` then the key — if nothing prints, configure your terminal
+
+### JS / TS setup
+
+Wired up in `lua/plugins/dap-js.lua`. Requires `js-debug-adapter` installed
+via `:Mason`. Opens the `pwa-node` adapter directly — no `nvim-dap-vscode-js`
+plugin (unmaintained, broken on current nvim-dap).
+
+Two default configurations are registered for `.js` / `.ts` files:
+
+- **Launch current file** — runs `${file}` with node
+- **Attach to process** — pick a running node process to attach to
+
+If your project has a `.vscode/launch.json`, load it with:
+
+```
+:lua require("dap.ext.vscode").load_launchjs()
+```
+
+### Inspecting values (while stopped at a breakpoint)
+
+- **Hover**: `<leader>de` to evaluate the word/selection under cursor
+- **Scopes panel** (dap-ui, left): expand locals/closures with `<CR>`
+- **REPL**: type any expression in the current frame's scope
+- **Stacks panel**: `<CR>` on a frame to jump to it
+
+### Watches (like VSCode's Watch panel)
+
+From inside the **Watches** window in dap-ui:
+
+| Key    | Action           |
+| ------ | ---------------- |
+| `a`    | Add expression   |
+| `e`    | Edit expression  |
+| `d`    | Delete watch     |
+| `<CR>` | Expand / collapse |
+
+Programmatic API (bind your own key if desired):
+
+```lua
+require("dapui").elements.watches.add("myVar")
+require("dapui").elements.watches.add(vim.fn.expand("<cword>"))  -- word under cursor
+```
 
 ---
 

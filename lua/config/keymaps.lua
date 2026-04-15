@@ -133,6 +133,34 @@ end, { desc = "Toggle whole word (search)" })
 vim.keymap.set({ "n", "v", "x" }, ";", ":", { desc = "Enter command mode" })
 vim.keymap.set({ "n", "v", "x" }, "<leader>;", ";", { desc = "Repeat last f/F/t/T" })
 
+-- VSCode-style debugger keybindings
+vim.keymap.set("n", "<F5>", function() require("dap").continue() end, { desc = "Debug: Continue" })
+vim.keymap.set("n", "<F9>", function() require("dap").toggle_breakpoint() end, { desc = "Debug: Toggle Breakpoint" })
+vim.keymap.set("n", "<F10>", function() require("dap").step_over() end, { desc = "Debug: Step Over" })
+vim.keymap.set("n", "<F11>", function() require("dap").step_into() end, { desc = "Debug: Step Into" })
+vim.keymap.set("n", "<S-F11>", function() require("dap").step_out() end, { desc = "Debug: Step Out" })
+vim.keymap.set("n", "<F23>", function() require("dap").step_out() end, { desc = "Debug: Step Out (Shift+F11 fallback)" })
+vim.keymap.set("n", "<S-F5>", function() require("dap").terminate() end, { desc = "Debug: Terminate" })
+vim.keymap.set("n", "<F17>", function() require("dap").terminate() end, { desc = "Debug: Terminate (Shift+F5 fallback)" })
+vim.keymap.set("n", "<C-S-F5>", function() require("dap").restart() end, { desc = "Debug: Restart" })
+
+-- <leader>d? → cheat-sheet popup listing the VSCode-style F-key bindings
+vim.keymap.set("n", "<leader>d?", function()
+  vim.notify(
+    table.concat({
+      "  F5       Continue / Start",
+      "  F9       Toggle Breakpoint",
+      "  F10      Step Over",
+      "  F11      Step Into",
+      "  Shift+F11  Step Out",
+      "  Shift+F5   Terminate",
+      "  Ctrl+Shift+F5  Restart",
+    }, "\n"),
+    vim.log.levels.INFO,
+    { title = "Debug F-key shortcuts" }
+  )
+end, { desc = "Debug: Show F-key cheat-sheet" })
+
 vim.keymap.set("i", "<CR>", function()
   local ok, blink = pcall(require, "blink.cmp")
   if ok and blink.is_visible() then
