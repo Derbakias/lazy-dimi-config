@@ -1,6 +1,6 @@
 # Neovim Setup 
 
-### check SHORTCUTS.md
+### Check SHORTCUTS.md
 
 Built on [LazyVim](https://lazyvim.github.io).
 
