@@ -248,6 +248,25 @@ return {
   },
 
 
+  -- Seamless C-h/j/k/l navigation between nvim splits and tmux panes
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+    },
+    keys = {
+      { "<C-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Navigate left (nvim/tmux)" },
+      { "<C-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Navigate down (nvim/tmux)" },
+      { "<C-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Navigate up (nvim/tmux)" },
+      { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Navigate right (nvim/tmux)" },
+    },
+  },
+
   -- Vim training game
   {
     "ThePrimeagen/vim-be-good",
@@ -400,8 +419,11 @@ return {
           shorting_target = 0,
         },
       }
-      opts.sections.lualine_z = opts.sections.lualine_z or {}
-      table.insert(opts.sections.lualine_z, 1, {
+      -- Remove LazyVim's default clock from lualine_z (since tmux shows datetime).
+      opts.sections.lualine_z = {}
+      -- Append the search counter to lualine_y so it sits next to progress/location.
+      -- Putting it in an empty lualine_z caused the section bg to flash in/out.
+      table.insert(opts.sections.lualine_y, {
         function()
           if vim.v.hlsearch == 0 then
             return ""

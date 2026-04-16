@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+#
+# Project picker. Bound to prefix + f in tmux (via display-popup).
+#
+#   Enter    -> open the project as a new tmux session (or attach if it exists)
+#   Ctrl-O   -> stay in the current pane and `cd` into the project
+#
+# Directory list comes from zoxide's frecency ranking; falls back to find
+# when zoxide isn't installed or its database is empty.
+
+mode="session"  # default action on Enter
+
+# The pane that invoked this picker. Works because inside display-popup,
+# tmux queries resolve against the caller pane's context.
+caller_pane=$(tmux display-message -p '#{pane_id}' 2>/dev/null)
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    zoxide_list=""
+    if command -v zoxide >/dev/null 2>&1; then
+        zoxide_list=$(zoxide query -l 2>/dev/null)
+    fi
+
+    header='Enter: new session   |   Ctrl-O: cd in the current pane'
+
+    if [[ -n $zoxide_list ]]; then
+        result=$(printf '%s\n' "$zoxide_list" | fzf --expect=ctrl-o --header="$header")
+    else
+        result=$(find "$HOME" -maxdepth 4 -type d \
+            \( -name node_modules -o -name .git -o -name .cache -o -name .local \
+               -o -name .venv -o -name __pycache__ -o -name .npm -o -name .mozilla \
+               -o -name .thunderbird -o -name snap \) -prune \
+            -o -type d -print 2>/dev/null | fzf --expect=ctrl-o --header="$header")
+    fi
+
+    key=$(head -n1 <<< "$result")
+    selected=$(sed -n 2p <<< "$result")
+
+    if [[ $key == "ctrl-o" ]]; then
+        mode="cd"
+    fi
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+# Reject anything that isn't an existing directory (e.g. --help, bad paths).
+if [[ ! -d $selected ]]; then
+    echo "tmux-sessionizer: not a directory: $selected" >&2
+    exit 1
+fi
+
+# Ctrl-O: send a `cd` to the caller pane and stay there.
+if [[ $mode == "cd" ]] && [[ -n $caller_pane ]]; then
+    tmux send-keys -t "$caller_pane" " cd $(printf '%q' "$selected")" Enter
+    exit 0
+fi
+
+selected_name=$(basename "$selected" | tr ' .' '__')
+
+# Default: open the project as a tmux session (create if missing, then switch/attach).
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s "$selected_name" -c "$selected"
+    exit 0
+fi
+
+if ! tmux has-session -t="$selected_name" 2> /dev/null; then
+    tmux new-session -ds "$selected_name" -c "$selected"
+fi
+
+if [[ -z $TMUX ]]; then
+    tmux attach -t "$selected_name"
+else
+    tmux switch-client -t "$selected_name"
+fi

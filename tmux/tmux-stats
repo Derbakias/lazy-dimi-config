@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Outputs: CPU% MEM% LOAD  -- called from tmux status-right every status-interval
+
+CACHE="/tmp/tmux-stats-cpu"
+
+# CPU: diff /proc/stat against last sample
+read _ a b c d _ < /proc/stat
+total=$((a + b + c + d))
+idle=$d
+if [[ -f $CACHE ]]; then
+    read prev_total prev_idle < "$CACHE"
+    dt=$((total - prev_total))
+    di=$((idle - prev_idle))
+    if (( dt > 0 )); then
+        cpu=$(( 100 * (dt - di) / dt ))
+    else
+        cpu=0
+    fi
+else
+    cpu=0
+fi
+echo "$total $idle" > "$CACHE"
+
+# RAM + Swap: percent used from /proc/meminfo
+read ram swap < <(awk '
+    /^MemTotal:/    {mt=$2}
+    /^MemAvailable:/{ma=$2}
+    /^SwapTotal:/   {st=$2}
+    /^SwapFree:/    {sf=$2}
+    END {
+        printf "%d ", (mt-ma)*100/mt
+        if (st > 0) printf "%d", (st-sf)*100/st
+        else printf "0"
+    }' /proc/meminfo)
+
+# Load: 2-min average
+load=$(awk '{print $2}' /proc/loadavg)
+
+printf "CPU %d%%  RAM %d%%  SWAP %d%%  LOAD %s" "$cpu" "$ram" "$swap" "$load"
