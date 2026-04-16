@@ -592,7 +592,7 @@ Press `/` to open the search bar, then type your pattern and press `Enter`.
 ## General[​](#general "Direct link to General")
 
 | Key                | Description                           | Mode               |
-| ------------------ | ------------------------------------- | ------------------ | --- |
+| ------------------ | ------------------------------------- | ------------------ |
 | j                  | Down                                  | n, x               |
 | <Down>             | Down                                  | n, x               |
 | k                  | Up                                    | n, x               |
@@ -671,7 +671,7 @@ Press `/` to open the search bar, then type your pattern and press `Enter`.
 | <c-/>              | Terminal (Root Dir)                   | n, t               |
 | <c-\_>             | which_key_ignore                      | n, t               |
 | <leader>-          | Split Window Below                    | n                  |
-| <leader>           |                                       | Split Window Right | n   |
+| <leader>|          | Split Window Right                    | n                  |
 | <leader>wd         | Delete Window                         | n                  |
 | <leader>wm         | Toggle Zoom Mode                      | n                  |
 | <leader>uZ         | Toggle Zoom Mode                      | n                  |
