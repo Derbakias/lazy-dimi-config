@@ -29,25 +29,8 @@ return {
   {
     "saghen/blink.cmp",
     opts = {
-      completion = {
-        list = {
-          selection = { preselect = false, auto_insert = false },
-        },
-      },
       keymap = {
         ["<Esc>"] = { "hide", "fallback" },
-        ["<CR>"] = {
-          function(cmp)
-            if cmp.is_visible() and cmp.get_selected_item() ~= nil then
-              return cmp.accept()
-            end
-            if cmp.is_visible() then
-              cmp.hide()
-            end
-            return vim.api.nvim_replace_termcodes("<CR>", true, true, true)
-          end,
-          "fallback",
-        },
       },
     },
   },
