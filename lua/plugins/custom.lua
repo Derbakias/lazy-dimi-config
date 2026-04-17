@@ -25,6 +25,33 @@ return {
     opts = { colorscheme = "catppuccin-mocha" },
   },
 
+  -- Completion: don't preselect; Enter inserts newline unless an item is chosen
+  {
+    "saghen/blink.cmp",
+    opts = {
+      completion = {
+        list = {
+          selection = { preselect = false, auto_insert = false },
+        },
+      },
+      keymap = {
+        ["<Esc>"] = { "hide", "fallback" },
+        ["<CR>"] = {
+          function(cmp)
+            if cmp.is_visible() and cmp.get_selected_item() ~= nil then
+              return cmp.accept()
+            end
+            if cmp.is_visible() then
+              cmp.hide()
+            end
+            return vim.api.nvim_replace_termcodes("<CR>", true, true, true)
+          end,
+          "fallback",
+        },
+      },
+    },
+  },
+
   -- Free up <C-l> in terminal so it clears the shell
   {
     "folke/snacks.nvim",
@@ -43,6 +70,7 @@ return {
         },
         sources = {
           grep = {
+            regex = false,
             args = { "--ignore-case" },
             actions = {
               toggle_case_sens = function(picker)
@@ -119,8 +147,6 @@ return {
               ["<A-t>"] = { "cycle_win", mode = { "i", "n" } },
               ["<A-j>"] = { "preview_scroll_down", mode = { "i", "n" } },
               ["<A-k>"] = { "preview_scroll_up", mode = { "i", "n" } },
-              ["<C-f>"] = false,
-              ["<C-b>"] = false,
             },
           },
           list = {

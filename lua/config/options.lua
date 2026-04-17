@@ -7,3 +7,4 @@ vim.opt.wrap = true -- wrap long lines within the window
 -- inlay hints disabled via nvim-lspconfig opts (see plugins/custom.lua)
 vim.g.lazyvim_prettier_needs_config = false -- run prettier even without a project config
 vim.g.autoformat = false -- disable autoformat on save by default; toggle with <leader>uf
+vim.g.root_spec = { { ".git" }, "lsp", "cwd" } -- prefer git root over LSP workspace for pickers
