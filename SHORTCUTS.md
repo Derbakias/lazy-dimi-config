@@ -160,6 +160,10 @@ Prompts for two inputs before opening the grep picker:
 | --------------- | ----------------------------------------------- |
 | `<A-d>`         | Add cursor at next match                        |
 | `<A-d><A-d>...` | Keep pressing to add more cursors on each match |
+| `n` / `N`       | Get next / previous occurrence                  |
+| `[` / `]`       | Select next / previous cursor                   |
+| `q`             | Skip current and get next occurrence            |
+| `Q`             | Remove current cursor / selection               |
 | `<Esc>`         | Exit multi-cursor mode                          |
 
 **Straight line multi-cursor (column):**

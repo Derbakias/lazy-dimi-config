@@ -222,6 +222,20 @@ return {
         ["Add Cursor Up"] = "<F20>",
         ["Add Cursor Down"] = "<F21>",
       }
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "visual_multi_start",
+        callback = function()
+          vim.keymap.set({ "n", "x" }, "<C-Up>", "<Plug>(VM-Add-Cursor-Up)", { buffer = true })
+          vim.keymap.set({ "n", "x" }, "<C-Down>", "<Plug>(VM-Add-Cursor-Down)", { buffer = true })
+        end,
+      })
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "visual_multi_exit",
+        callback = function()
+          pcall(vim.keymap.del, { "n", "x" }, "<C-Up>", { buffer = true })
+          pcall(vim.keymap.del, { "n", "x" }, "<C-Down>", { buffer = true })
+        end,
+      })
     end,
   },
 
