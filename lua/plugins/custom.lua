@@ -19,6 +19,13 @@ local function grep_title(picker)
 end
 
 return {
+  -- aerial's default branch now requires Neovim 0.12+ (prints a deprecation
+  -- error on 0.11). Pin to the maintained nvim-0.11 remove when you upgrade.
+  {
+    "stevearc/aerial.nvim",
+    branch = "nvim-0.11",
+  },
+
   -- Locked colorscheme
   {
     "LazyVim/LazyVim",
