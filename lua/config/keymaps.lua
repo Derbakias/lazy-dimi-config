@@ -2,6 +2,17 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit insert mode" })
+
+-- Open my personal SHORTCUTS.md cheatsheet from any directory (like :help).
+-- Absolute path via stdpath("config") => works regardless of the current repo.
+vim.api.nvim_create_user_command("Shortcuts", function()
+  local path = vim.fn.stdpath("config") .. "/SHORTCUTS.md"
+  vim.cmd("tabedit " .. vim.fn.fnameescape(path))
+  vim.bo.modifiable = false
+  vim.bo.readonly = true
+  -- q closes the cheatsheet tab, like :help.
+  vim.keymap.set("n", "q", "<cmd>tabclose<cr>", { buffer = true, desc = "Close shortcuts" })
+end, { desc = "Open my SHORTCUTS.md cheatsheet" })
 vim.keymap.set("t", "<C-x>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = "Go to left window" })
 vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { desc = "Go to lower window" })
