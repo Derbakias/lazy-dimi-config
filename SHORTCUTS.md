@@ -250,6 +250,23 @@ A **hunk** is a contiguous block of changes within a file. Gitsigns lets you sta
 | `<leader>e`                      | Toggle the file panel (open/close) |
 | `q`                              | Close Diffview                     |
 
+### Merge Conflicts (Diffview)
+
+During a merge/rebase, `<leader>gv` opens the 3-way view: **Incoming** (left) and **Current** (right) on top, the editable **Result** below. Run the keys below with the cursor inside a conflict in the **Result** pane.
+
+**Picking a side:**
+
+| Key          | Action                                    | In your layout           |
+| ------------ | ----------------------------------------- | ------------------------ |
+| `<leader>co` | choose ours                               | the Current pane (right) |
+| `<leader>ct` | choose theirs                             | the Incoming pane (left) |
+| `<leader>cb` | choose base                               | the common ancestor      |
+| `<leader>ca` | choose all — keep both, ours then theirs  | combination              |
+| `dx`         | delete the conflict region — take neither | —                        |
+
+> Uppercase applies to the whole file: `<leader>cO` / `<leader>cT` / `<leader>cB` / `<leader>cA`.
+> Navigate conflicts with `]x` / `[x`. After resolving all files, `q` to close, then `git commit` (already staged).
+
 ---
 
 ## LSP Hover Docs
