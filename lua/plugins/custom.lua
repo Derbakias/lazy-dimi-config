@@ -353,7 +353,32 @@ return {
     },
     opts = {
       enhanced_diff_hl = true,
-      hooks = {},
+      hooks = {
+        -- The Current (OURS) pane's label from update_merge_context below gets
+        -- clobbered by diffview's default rev winbar (which shows the branch
+        -- name) because that pane's buffer initializes after the label is set.
+        -- Re-apply it here, which fires after the window's winbar is assigned so
+        -- it wins. Only the Current (stage 2) pane is touched; Incoming/Result
+        -- are left to update_merge_context. Stage is read from the buffer name
+        -- (".../.git/:2:/path"); the layout window ids are nil on the entry.
+        diff_buf_win_enter = function(bufnr, winid, ctx)
+          if not ((ctx and ctx.layout_name or ""):match("^diff[34]")) then
+            return
+          end
+          if not vim.api.nvim_buf_get_name(bufnr):match(":2:/") then
+            return
+          end
+          local view = require("diffview.lib").get_current_view()
+          local ours = view and view.merge_ctx and view.merge_ctx.ours
+          vim.wo[winid].winbar = (" Current %s"):format((ours and ours.hash or ""):sub(1, 10))
+        end,
+      },
+      view = {
+        -- VS Code-style merge: OURS | THEIRS on top, the editable result below.
+        merge_tool = {
+          layout = "diff3_mixed",
+        },
+      },
       keymaps = {
         view = {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" } },
@@ -435,6 +460,86 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      -- VS Code-style merge layout. diffview hard-codes OURS on the left,
+      -- so we override diff3_mixed's window-creation order to swap the two
+      -- top columns => THEIRS (Incoming) left, OURS (Current) right, with
+      -- the result buffer full-width below. The conflict-choose keymaps act
+      -- on the markers inside the result buffer, not on window position, so
+      -- swapping the columns is purely visual and safe.
+      local async = require("diffview.async")
+      local Window = require("diffview.scene.window").Window
+      local Diff3Mixed = require("diffview.scene.layouts.diff_3_mixed").Diff3Mixed
+      local api = vim.api
+      local await = async.await
+
+      Diff3Mixed.create = async.void(function(self, pivot)
+        self:create_pre()
+        local curwin
+
+        pivot = pivot or self:find_pivot()
+        assert(api.nvim_win_is_valid(pivot), "Layout creation requires a valid window pivot!")
+
+        for _, win in ipairs(self.windows) do
+          if win.id ~= pivot then
+            win:close(true)
+          end
+        end
+
+        -- Result (working tree) full-width along the bottom.
+        api.nvim_win_call(pivot, function()
+          vim.cmd("belowright sp")
+          curwin = api.nvim_get_current_win()
+          if self.b then self.b:set_id(curwin) else self.b = Window({ id = curwin }) end
+        end)
+
+        -- THEIRS created first => ends up on the left.
+        api.nvim_win_call(pivot, function()
+          vim.cmd("aboveleft vsp")
+          curwin = api.nvim_get_current_win()
+          if self.c then self.c:set_id(curwin) else self.c = Window({ id = curwin }) end
+        end)
+
+        -- OURS created second => ends up on the right.
+        api.nvim_win_call(pivot, function()
+          vim.cmd("aboveleft vsp")
+          curwin = api.nvim_get_current_win()
+          if self.a then self.a:set_id(curwin) else self.a = Window({ id = curwin }) end
+        end)
+
+        api.nvim_win_close(pivot, true)
+        self.windows = { self.a, self.b, self.c }
+        await(self:create_post())
+      end)
+
+      -- Rename the winbar labels: Incoming / Current / Result.
+      local FileEntry = require("diffview.scene.file_entry").FileEntry
+      function FileEntry:update_merge_context(ctx)
+        ctx = ctx or self.merge_ctx
+        if ctx then self.merge_ctx = ctx else return end
+        local layout = self.layout
+        if layout.a then
+          layout.a.file.winbar = (" Current %s"):format((ctx.ours.hash):sub(1, 10))
+        end
+        if layout.b then
+          layout.b.file.winbar = " Result"
+        end
+        if layout.c then
+          layout.c.file.winbar = (" Incoming %s %s"):format(
+            (ctx.theirs.hash):sub(1, 10),
+            ctx.theirs.ref_names and ("(" .. ctx.theirs.ref_names .. ")") or ""
+          )
+        end
+        if layout.d then
+          layout.d.file.winbar = (" Base %s %s"):format(
+            (ctx.base.hash):sub(1, 10),
+            ctx.base.ref_names and ("(" .. ctx.base.ref_names .. ")") or ""
+          )
+        end
+      end
+
+      require("diffview").setup(opts)
+    end,
   },
 
   -- Show full relative path in statusline; show real search count beyond 99
