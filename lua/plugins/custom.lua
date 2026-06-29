@@ -642,4 +642,63 @@ return {
       end
     end,
   },
+
+  -- Surround text objects. Uses a `gs` prefix instead of mini's default `s`
+  -- prefix so it doesn't collide with flash.nvim's `s`/`S` jumps (and avoids the
+  -- operator-timing race that bites `ys`/`sa`). `g` isn't an operator, so the
+  -- sequence never fires early no matter how slowly you type.
+  --   Visual (VSCode-style): select, then press the bracket -> wraps it.
+  --   Double/triple via COUNT: viw2{ -> {{word}} , viw3( -> (((word)))
+  --   Normal (dot-repeatable): gsaiw)  then `.` repeats on the next word.
+  --   Delete:  gsd{char}   Replace: gsr{old}{new}
+  {
+    "nvim-mini/mini.surround",
+    event = "VeryLazy",
+    opts = {
+      mappings = {
+        add = "gsa",
+        delete = "gsd",
+        find = "gsf",
+        find_left = "gsF",
+        highlight = "gsh",
+        replace = "gsr",
+        update_n_lines = "gsn",
+      },
+    },
+    config = function(_, opts)
+      require("mini.surround").setup(opts)
+      -- "Select a word, press the bracket to wrap it" -- and `.` repeats it.
+      -- Each key routes through the NORMAL-mode operator (gsaiw<char>) instead
+      -- of a visual surround, because the normal operator is dot-repeatable:
+      --   viw {           -> {word}
+      --   .               -> {{word}}      (repeat in place to nest/double)
+      --   w  .            -> wrap the next word too
+      -- Note: this wraps the WORD under the cursor, so it's meant for word
+      -- selections. For arbitrary selections / quotes / tags, use `S<char>`
+      -- (exact selection, but not dot-repeatable).
+      local wrap = {
+        ["("] = ")",
+        [")"] = ")",
+        ["{"] = "}",
+        ["}"] = "}",
+        ["["] = "]",
+        ["]"] = "]",
+      }
+      for lhs, char in pairs(wrap) do
+        vim.keymap.set("x", lhs, "<Esc>gsaiw" .. char, { remap = true, desc = "Wrap word with " .. char .. " (dot-repeatable)" })
+      end
+      -- Generic "surround exact selection with next char" (quotes, tags, etc).
+      vim.keymap.set("x", "S", "gsa", { remap = true, desc = "Surround selection" })
+    end,
+  },
+
+  -- flash.nvim maps `S` in visual mode (treesitter select), which would shadow
+  -- the surround shortcut above. Drop flash's visual `S` only; it keeps `S` in
+  -- normal/operator mode for treesitter jumps.
+  {
+    "folke/flash.nvim",
+    keys = {
+      { "S", mode = "x", false },
+    },
+  },
 }
