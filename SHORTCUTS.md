@@ -329,13 +329,26 @@ The autocomplete popup appears in **insert mode** only (press `i` first).
 | `<leader>ft`        | New floating terminal (fresh shell each press)      |
 | `<C-/>`             | Toggle terminal `[count]` — hides/restores, process stays alive |
 | `1<C-/>`, `2<C-/>`… | Toggle terminal 1, 2, … (each is an independent persistent shell) |
-| `<C-x>`             | Exit terminal mode (back to normal mode)            |
+| `<C-x>` / `jk`      | Exit terminal mode (back to normal mode)            |
 | `<C-h/j/k/l>`       | Navigate windows directly from terminal mode        |
 | `<C-w>` (in term)   | Cycle to next window                                |
 
 > `<C-/>` uses Snacks' count-indexed terminals: `N<C-/>` gives you terminal N.
 > Press the same count again to hide it; press again to bring it back with its history intact.
 > `<leader>ft` always spawns a brand-new floating shell (no count, not persistent-by-index).
+> Terminals now auto-enter insert mode on open/focus — press `jk` or `<C-x>` to drop to normal mode for scrolling/yanking.
+
+---
+
+## Compile & Run (C/C++)
+
+| Key         | Action                                                    |
+| ----------- | ---------------------------------------------------------- |
+| `<leader>r` | Save, compile (`gcc`/`g++`), and run the current file      |
+
+Only active in `.c`/`.cpp` buffers. Compiles to `/tmp/<filename-without-extension>` with
+`-Wall -Wextra -std=c11` (or `-std=c++17` for C++), then runs the binary in a fresh floating
+terminal — so `scanf`/`cin` input works directly. Compiler errors show in that same terminal.
 
 ---
 

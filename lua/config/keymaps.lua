@@ -173,6 +173,33 @@ vim.keymap.set("n", "<leader>d?", function()
   )
 end, { desc = "Debug: Show F-key cheat-sheet" })
 
+-- Compile & run the current C/C++ file in a floating terminal
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp" },
+  callback = function(ev)
+    vim.keymap.set("n", "<leader>r", function()
+      vim.cmd("write")
+      local is_cpp = vim.bo[ev.buf].filetype == "cpp"
+      local compiler = is_cpp and "g++" or "gcc"
+      local std = is_cpp and "c++17" or "c11"
+      local src = vim.fn.expand("%:p")
+      local out = "/tmp/" .. vim.fn.expand("%:t:r")
+      local cmd = string.format(
+        "%s -Wall -Wextra -std=%s %s -o %s && %s",
+        compiler,
+        std,
+        vim.fn.shellescape(src),
+        vim.fn.shellescape(out),
+        vim.fn.shellescape(out)
+      )
+      -- auto_close=false: a compile error exits non-zero and would otherwise
+      -- close this window before you can read it. win.position=bottom to
+      -- match <leader>ft instead of Snacks' floating default for cmd terminals
+      Snacks.terminal.open(cmd, { auto_close = false, win = { position = "bottom" } })
+    end, { buffer = ev.buf, desc = "Compile & run" })
+  end,
+})
+
 vim.keymap.set("i", "<CR>", function()
   local ok, blink = pcall(require, "blink.cmp")
   if ok and blink.is_visible() then
