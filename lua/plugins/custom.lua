@@ -154,8 +154,8 @@ return {
         },
       },
       terminal = {
-        auto_insert = false,
-        start_insert = false,
+        auto_insert = true,
+        start_insert = true,
         win = {
           keys = {
             nav_l = false,
